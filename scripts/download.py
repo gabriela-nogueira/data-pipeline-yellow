@@ -1,3 +1,4 @@
+from datetime import datetime
 import requests
 import logging
 import sys
@@ -7,7 +8,7 @@ logging.basicConfig(
     format="%(asctime)s - %(levelname)s - %(message)s"
 )
 
-def download_file(file_url):
+def download_file(dat_ref):
     """
     Downloads a file from the given URI and saves it locally as a Parquet file.
 
@@ -21,7 +22,9 @@ def download_file(file_url):
     Returns:
         None
     """
-    logging.info("Starting file download.")
+
+    file_url = f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{dat_ref}.parquet'
+    logging.info(f"Starting file download {file_url}")
     filename = file_url.split('/')[-1]
     local_filename = f'../temp/{filename}'
     response = requests.get(file_url, stream=True)
@@ -35,11 +38,10 @@ def download_file(file_url):
         logging.error(f'Could not download the file.')
         raise Exception(f'{e}')
     
-    logging.info("Download completed.")
+    logging.info(f"Download completed {file_url}")
 
     return None
 
 
 if __name__ == '__main__':
-    url = sys.argv[1]
-    download_file(url)
+    download_file()

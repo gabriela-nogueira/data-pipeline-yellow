@@ -6,7 +6,7 @@ import os
 
 dotenv.load_dotenv()
 
-def upload_file_to_bucket(file_path, bucket_name):
+def upload_file_to_bucket(file_path, bucket_name, folder=None):
     """
     Uploads a local file to the root of the specified S3 bucket.
 
@@ -26,7 +26,10 @@ def upload_file_to_bucket(file_path, bucket_name):
         logging.error(f"File does not exist: {file_path}")
         return False
 
-    file_name = os.path.basename(file_path)
+    if folder != None:
+        file_name = folder + '/' + os.path.basename(file_path)
+    else:
+        file_name = os.path.basename(file_path)
 
     try:
         s3 = boto3.client("s3")
@@ -47,4 +50,5 @@ def upload_file_to_bucket(file_path, bucket_name):
 if __name__ == '__main__':
     file_path = sys.argv[1]
     bucket_name = sys.argv[2]
-    upload_file_to_bucket(file_path, bucket_name)
+    folder=sys.argv[3]
+    upload_file_to_bucket(file_path, bucket_name, folder)
