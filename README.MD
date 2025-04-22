@@ -22,7 +22,7 @@ Criar um pipeline que ingeste as informações de janeiro-maio de 2023 e após i
 
 ## Arquitetura Proposta
 
-![Arquitetura](./diagrama.png)
+![Arquitetura](./diagrama_v2.png)
 
 ## Como executar o projeto localmente
 
