@@ -22,17 +22,19 @@ Criar um pipeline que ingeste as informações de janeiro-maio de 2023 e após i
 
 ## Arquitetura Proposta
 
+![Arquitetura](./diagrama.png)
+
 ## Como executar o projeto localmente
 
 - Crie um ambiente virtual python
 - Instale as dependências do projeto
-- Crie um arquivo .env dentro da pasta ./scripts com as variáveis de ambiente: 
-    ```AWS_ACCESS_KEY_ID={aws_key}```
-    ```AWS_SECRET_ACCESS_KEY={secret_key}```
-    ```AWS_DEFAULT_REGION='us-east-1'```
+- Crie um arquivo .env dentro da pasta ./scripts com as variáveis de ambiente:   
+    ```AWS_ACCESS_KEY_ID={aws_key}```  
+    ```AWS_SECRET_ACCESS_KEY={secret_key}```  
+    ```AWS_DEFAULT_REGION='us-east-1'```  
 - No arquivo connf/conf.yaml, altere as variáveis de bucket e a data de referência que gostaria de fazer o upload
-- Execute via linha de comando o arquivo run.py
-```bash #!/bin/bash python3 run.py``` 
+- Execute via linha de comando o arquivo run.py  
+```bash #!/bin/bash python3 run.py```   
 - Valide a criação da tabela no Athena.
 
 ## Features Implementadas
