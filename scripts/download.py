@@ -26,7 +26,7 @@ def download_file(dat_ref):
     file_url = f'https://d37ci6vzurychx.cloudfront.net/trip-data/yellow_tripdata_{dat_ref}.parquet'
     logging.info(f"Starting file download {file_url}")
     filename = file_url.split('/')[-1]
-    local_filename = f'../temp/{filename}'
+    local_filename = f'./temp/{filename}'
     response = requests.get(file_url, stream=True)
     response.raise_for_status() 
 

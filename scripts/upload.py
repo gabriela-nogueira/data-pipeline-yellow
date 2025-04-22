@@ -39,11 +39,16 @@ def upload_file_to_bucket(file_path, bucket_name, folder=None):
             Key=file_name
         )
         logging.info(f"File successfully uploaded to s3://{bucket_name}/{file_name}")
+        
+        if os.path.exists(file_path):
+            os.remove(file_path)
+            logging.info(f"File successfully deleted from temp folder.")
         return True
 
     except Exception as e:
         logging.error(f"An unexpected error occurred: {e}")
         return False
+
 
     return None
 

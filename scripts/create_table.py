@@ -5,46 +5,43 @@ import dotenv
 
 dotenv.load_dotenv()
 
-def create_table_or_partition(dat_ref):
-    dat_formatted = datetime.strptime(dat_ref, '%Y-%m').strftime("%Y%m")
+def create_table_or_partition(db, table_name, athena_s3, table_bucket, data_ref, schema):
     client = boto3.client('athena', region_name='us-east-1')
 
-    query = "CREATE DATABASE IF NOT EXISTS s_prd"
-    output_location = 's3://prd-resultados-athena-gsn/athena/'
+    query = f"CREATE DATABASE IF NOT EXISTS {db}"
+    output_location = f's3://{athena_s3}'
 
     response = client.start_query_execution(
         QueryString=query,
         ResultConfiguration={'OutputLocation': output_location}
     )
 
-    query = """
-        CREATE EXTERNAL TABLE IF NOT EXISTS s_prd.yellow_taxi_trip (
-        VendorID INT,
-        passenger_count DOUBLE,
-        total_amount DOUBLE,
-        tpep_pickup_datetime TIMESTAMP,
-        tpep_dropoff_datetime TIMESTAMP
+    columns = ", ".join(f"{col} {tipo}" for col, tipo in schema.items() if col != 'data_ref')
+
+    query = f"""
+        CREATE EXTERNAL TABLE IF NOT EXISTS {db}.{table_name} (
+        {columns}
     )
-    PARTITIONED BY (dat_ref STRING)
+    PARTITIONED BY (data_ref STRING)
     STORED AS PARQUET
-    LOCATION 's3://prd-yellow-taxi-table-gabriela/'
+    LOCATION 's3://{table_bucket}/'
     TBLPROPERTIES ('parquet.compress'='SNAPPY');
     """
 
     response = client.start_query_execution(
         QueryString=query,
         QueryExecutionContext={
-            'Database': 's_prd'
+            'Database': db
         },
         ResultConfiguration={
-            'OutputLocation': 's3://prd-resultados-athena-gsn/athena/',
+            'OutputLocation': output_location,
         }
     )
 
     query_partition = f"""
-    ALTER TABLE s_prd.yellow_taxi_trip
-    ADD IF NOT EXISTS PARTITION (dat_ref='{dat_formatted}')
-    LOCATION 's3://prd-yellow-taxi-table-gabriela/dat_ref={dat_formatted}/';
+    ALTER TABLE {db}.{table_name}
+    ADD IF NOT EXISTS PARTITION (data_ref='{data_ref}')
+    LOCATION 's3://{table_bucket}/data_ref={data_ref}/';
     """
 
     response = client.start_query_execution(

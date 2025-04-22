@@ -1,15 +1,22 @@
 s3-parameters:
-  source-bucket: 'yellow-taxi-files-gabriela'
-  target-bucket: 'prd-yellow-taxi-table-gabriela'
+  raw-bucket: 'yellow-taxi-files-gabriela'
+  prod-bucket: 'prd-yellow-taxi-table-gabriela'
   athena-bucket: 'prd-resultados-athena-gsn/athena/'
   region: 'us-east-1'
 
 process-parameters:
-  dat_ref: '2023-01'
-  partition_column: 'dat_ref'
+  data_ref: '2023-05'
+  partition_column: 'data_ref'
   file_prefix: 'yellow_tripdata'
   file_extension: 'parquet'
+  db: 's_prd'
+  table_name: 'yellow_taxi_data'
 
 schema:
-  VendorID: 
+  VendorID: 'INT'
+  passenger_count: 'DOUBLE'
+  total_amount: 'DOUBLE'
+  tpep_pickup_datetime: 'TIMESTAMP'
+  tpep_dropoff_datetime: 'TIMESTAMP'
+  data_ref: 'STRING'    
 
